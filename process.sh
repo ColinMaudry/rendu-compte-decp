@@ -75,3 +75,5 @@ do
     fi
 done < $csv
 echo "</csv>" >> $xml
+
+message "Fin de de la conversion"
