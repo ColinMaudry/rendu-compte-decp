@@ -70,12 +70,12 @@
     </xsl:template>
 
 
-    <!-- Pas de conversion -->
-    <xsl:template match="Annee | LiblelleCPV | Datepublicationdesdonnees | Role | Commune_Titulaire | siren_Titualire | Avance | Nbavenantscptables | Delaismoyenmandatementjours | SIRETacheteur | Siret_Titulaire | Nomacheteur"/>
-
-    <xsl:template match="@*|node()">
-        <xsl:copy>
+    <!-- Pas de conversion
+    <xsl:template match="Annee | LiblelleCPV | Datepublicationdesdonnees | Role | Commune_Titulaire | siren_Titualire | Avance | Nbavenantscptables | Delaismoyenmandatementjours | SIRETacheteur | Siret_Titulaire | Nomacheteur | MontantinitialHt | MontantmodifieHt"/>
+ -->
+    <xsl:template match="text()" priority="-1">
+        <!-- <xsl:copy>
           <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>
+        </xsl:copy> -->
     </xsl:template>
 </xsl:stylesheet>
