@@ -13,7 +13,8 @@ function message {
 export base=`pwd`
 export now=`date +%Y-%m-%dT%H:%M:%S`
 export oriCSV="$1"
-export csv="$base/marches-$now.csv"
+#export csv="$base/marches-$now.csv"
+export csv="$base/marches-temp.csv"
 export xml=$csv.xml
 
 # Préparation du fichier
@@ -40,7 +41,7 @@ echo '<csv>' >> $xml
 
 while IFS=";" read -r Annee Iddumarche Nomacheteur SIRETacheteur Nature Objetmarche CodeCPV LiblelleCPV Procedure Lieuexecution Dureemois Datenotification Datepublicationdesdonnees MontantinitialHt MontantmodifieHt Montantprevu Typeprix TitulaireMandataire Role CodePostal_Titulaire CodeInsee_Titulaire Commune_Titulaire Siret_Titulaire siren_Titualire Avance Nbavenantscptables Delaismoyenmandatementjours
 do
-    if [[ ! $Annee = "Annee" ]]
+    if [[ ! $Iddumarche = "Iddumarchee" ]]
     then
         echo "  <marche>" >> $xml
         echo "    <Annee>${Annee}</Annee>" >> $xml
@@ -60,7 +61,7 @@ do
         echo "    <MontantmodifieHt>$MontantmodifieHt</MontantmodifieHt>" | tr -d ", " >> $xml
         echo "    <Montantprevu>$Montantprevu</Montantprevu>" | tr -d ", " >> $xml
         echo "    <Typeprix>$Typeprix</Typeprix>" >> $xml
-        echo "    <TitulairMandataire>$TitulairMandataire</TitulairMandataire>" >> $xml
+        echo "    <TitulaireMandataire>$TitulaireMandataire</TitulaireMandataire>" >> $xml
         echo "    <Role>$Role</Role>" >> $xml
         echo "    <CodePostal_Titulaire>$CodePostal_Titulaire</CodePostal_Titulaire>" >> $xml
         echo "    <CodeInsee_Titulaire>$CodeInsee_Titulaire</CodeInsee_Titulaire>" >> $xml
@@ -75,5 +76,14 @@ do
     fi
 done < $csv
 echo "</csv>" >> $xml
+
+message "Conversion du XML basique vers le format DECP..."
+
+mv $xml $xml.simple
+xsltproc conversion.xslt $xml.simple > $xml.unformatted
+xmllint --format $xml.unformatted > $xml
+rm $xml.unformatted
+
+head -n 40 $xml
 
 message "Fin de de la conversion"
