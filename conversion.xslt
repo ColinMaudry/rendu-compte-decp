@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions">
-    <xsl:output encoding="UTF-8" format="xml"/>
+    <xsl:output encoding="UTF-8"/>
     <xsl:template match="/">
         <marches>
             <xsl:apply-templates/>
@@ -26,7 +26,9 @@
     </xsl:template>
 
     <xsl:template match="Iddumarche">
-        <id><xsl:value-of select="text()"/></id>
+        <id>
+            <xsl:value-of select="concat(replace(../Datenotification,'^.+(\d\d\d\d)$','$1'),text())"/>
+        </id>
     </xsl:template>
 
     <xsl:template match="Objetmarche">
@@ -48,6 +50,10 @@
     <!-- Demander un mapping des valeurs au client -->
     <xsl:template match="Procedure">
         <procedure><xsl:value-of select="."/></procedure>
+    </xsl:template>
+
+    <xsl:template match="Datenotification">
+        <dateNotification><xsl:value-of select="replace(text(),'(\d\d)/(\d\d)/(\d\d\d\d)','$3-$2-$1')"/></dateNotification>
     </xsl:template>
 
     <xsl:template match="Nature">
