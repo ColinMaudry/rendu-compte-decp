@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions">
-    <xsl:output encoding="UTF-8"/>
+    <xsl:output encoding="UTF-8" indent="yes"/>
     <xsl:template match="/">
         <marches>
             <xsl:apply-templates/>
@@ -22,6 +22,7 @@
                     <typeIdentifiant>SIRET</typeIdentifiant>
                 </titulaire>
             </titulaires>
+            <modifications/>
         </marche>
     </xsl:template>
 
@@ -50,6 +51,23 @@
     <!-- Demander un mapping des valeurs au client -->
     <xsl:template match="Procedure">
         <procedure><xsl:value-of select="."/></procedure>
+    </xsl:template>
+
+    <xsl:template match="Typeprix[text()]">
+        <formePrix>
+            <xsl:choose>
+              <xsl:when test=". = 'Fermes'">
+                  <xsl:text>Ferme</xsl:text>
+              </xsl:when>
+              <xsl:when test=". = 'Fermes actualisables'">
+                  <xsl:text>Ferme et actualisable</xsl:text>
+              </xsl:when>
+              <xsl:when test=". = 'Révisables'">
+                  <xsl:text>Révisable</xsl:text>
+              </xsl:when>
+              <xsl:otherwise></xsl:otherwise>
+            </xsl:choose>
+        </formePrix>
     </xsl:template>
 
     <xsl:template match="Datenotification">
