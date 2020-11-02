@@ -81,9 +81,9 @@ message "Conversion du XML basique vers le format DECP..."
 
 mv $xml $xml.simple
 jar=`ls -1 lib | grep "saxon"`
-java -jar lib/$jar -s:$xml.simple -xsl:conversion.xslt -o:$xml.unformatted
-xmllint --format $xml.unformatted > $xml
-rm $xml.unformatted
+java -jar lib/$jar -s:$xml.simple -xsl:conversion.xslt -o:$xml
+#xmllint --format $xml.unformatted > $xml
+#rm $xml.unformatted
 
 head -n 40 $xml
 
