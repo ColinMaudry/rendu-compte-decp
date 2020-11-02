@@ -80,7 +80,8 @@ echo "</csv>" >> $xml
 message "Conversion du XML basique vers le format DECP..."
 
 mv $xml $xml.simple
-xsltproc conversion.xslt $xml.simple > $xml.unformatted
+jar=`ls -1 lib | grep "saxon"`
+java -jar lib/$jar -s:$xml.simple -xsl:conversion.xslt -o:$xml.unformatted
 xmllint --format $xml.unformatted > $xml
 rm $xml.unformatted
 
