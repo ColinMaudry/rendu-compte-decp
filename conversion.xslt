@@ -3,12 +3,33 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions">
     <xsl:output encoding="UTF-8" indent="yes"/>
     <xsl:template match="/">
+        <xsl:apply-templates/>
+    </xsl:template>
+    <xsl:template match="csv">
         <marches>
-            <xsl:apply-templates/>
+            <xsl:for-each-group select="marche" group-by="Iddumarche">
+                <marche>
+                    <xsl:apply-templates/>
+                    <acheteur>
+                        <id><xsl:value-of select="SIRETacheteur"/></id>
+                        <nom><xsl:value-of select="Nomacheteur"/></nom>
+                    </acheteur>
+                    <titulaires>
+                        <xsl:for-each select="current-group()">
+                            <titulaire>
+                                <id><xsl:value-of select="Siret_Titulaire"/></id>
+                                <denominationSociale><xsl:value-of select="TitulaireMandataire"/></denominationSociale>
+                                <typeIdentifiant>SIRET</typeIdentifiant>
+                            </titulaire>
+                        </xsl:for-each>
+                    </titulaires>
+                    <modifications/>
+                </marche>
+            </xsl:for-each-group>
         </marches>
     </xsl:template>
 
-    <xsl:template match="marche">
+    <!-- <xsl:template match="marche">
         <marche>
             <xsl:apply-templates/>
             <acheteur>
@@ -24,7 +45,7 @@
             </titulaires>
             <modifications/>
         </marche>
-    </xsl:template>
+    </xsl:template> -->
 
     <xsl:template match="Iddumarche">
         <id>
