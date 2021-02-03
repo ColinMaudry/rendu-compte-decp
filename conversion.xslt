@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions">
-    <xsl:output encoding="UTF-8" indent="yes"/>
+    <xsl:output indent="yes"/>
     <xsl:template match="/">
         <xsl:apply-templates/>
     </xsl:template>
     <xsl:template match="csv">
         <marches>
-            <xsl:for-each-group select="marche" group-by="Iddumarche">
+            <xsl:for-each-group select="marche" group-by="id">
                 <marche>
                     <xsl:apply-templates/>
                     <acheteur>
-                        <id><xsl:value-of select="SIRETacheteur"/></id>
-                        <nom><xsl:value-of select="Nomacheteur"/></nom>
+                        <id><xsl:value-of select="acheteur_id"/></id>
+                        <nom><xsl:value-of select="acheteur_nom"/></nom>
                     </acheteur>
                     <titulaires>
                         <xsl:for-each select="current-group()">
                             <titulaire>
-                                <id><xsl:value-of select="Siret_Titulaire"/></id>
-                                <denominationSociale><xsl:value-of select="TitulaireMandataire"/></denominationSociale>
+                                <id><xsl:value-of select="titulaires_id"/></id>
+                                <denominationSociale><xsl:value-of select="titulaires_denominationLegale"/></denominationSociale>
                                 <typeIdentifiant>SIRET</typeIdentifiant>
                             </titulaire>
                         </xsl:for-each>
                     </titulaires>
+                    <lieuExecution>
+                        <code><xsl:value-of select="lieuExecution_code"/></code>
+                        <typeCode><xsl:value-of select="lieuExecution_typeCode"/></typeCode>
+                        <nom><xsl:value-of select="lieuExecution_nom"/></nom>
+                    </lieuExecution>
                     <modifications/>
                 </marche>
             </xsl:for-each-group>
@@ -47,34 +52,37 @@
         </marche>
     </xsl:template> -->
 
-    <xsl:template match="Iddumarche">
+    <xsl:template match="id">
+        <xsl:variable name="id">
+            <xsl:number value="text()" format="0000000001"/>
+        </xsl:variable>
         <id>
-            <xsl:value-of select="concat(replace(../Datenotification,'^.+(\d\d\d\d)$','$1'),text())"/>
+            <xsl:value-of select="concat(replace(../Datenotification,'^.+(\d\d\d\d)$','$1'),$id)"/>
         </id>
     </xsl:template>
 
-    <xsl:template match="Objetmarche">
+    <xsl:template match="objet">
         <objet><xsl:value-of select="."/></objet>
     </xsl:template>
 
-    <xsl:template match="CodeCPV">
+    <xsl:template match="codeCPV">
         <codeCPV><xsl:value-of select="."/></codeCPV>
     </xsl:template>
 
-    <xsl:template match="Dureemois">
+    <xsl:template match="dureeMois">
         <dureeMois><xsl:value-of select="."/></dureeMois>
     </xsl:template>
 
-    <xsl:template match="Montantprevu">
+    <xsl:template match="montant">
         <montant><xsl:value-of select="."/></montant>
     </xsl:template>
 
     <!-- Demander un mapping des valeurs au client -->
-    <xsl:template match="Procedure">
+    <xsl:template match="procedure">
         <procedure><xsl:value-of select="."/></procedure>
     </xsl:template>
 
-    <xsl:template match="Typeprix[text()]">
+    <xsl:template match="formePrix[text()]">
         <formePrix>
             <xsl:choose>
               <xsl:when test=". = 'Fermes'">
@@ -86,16 +94,16 @@
               <xsl:when test=". = 'Révisables'">
                   <xsl:text>Révisable</xsl:text>
               </xsl:when>
-              <xsl:otherwise></xsl:otherwise>
+              <xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
             </xsl:choose>
         </formePrix>
     </xsl:template>
 
-    <xsl:template match="Datenotification">
+    <xsl:template match="dateNotification">
         <dateNotification><xsl:value-of select="replace(text(),'(\d\d)/(\d\d)/(\d\d\d\d)','$3-$2-$1')"/></dateNotification>
     </xsl:template>
 
-    <xsl:template match="Nature">
+    <xsl:template match="nature">
         <nature>
             <xsl:choose>
                 <xsl:when test="text() = 'Accord cadre'">
