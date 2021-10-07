@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions">
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:cm="https://colin.maudry.fr/xslt/">
     <xsl:output indent="yes"/>
     <xsl:template match="/">
         <xsl:apply-templates/>
@@ -53,11 +53,9 @@
     </xsl:template> -->
 
     <xsl:template match="id">
-        <xsl:variable name="id">
-            <xsl:number value="text()" format="0000000001"/>
-        </xsl:variable>
+
         <id>
-            <xsl:value-of select="concat(replace(../Datenotification,'^.+(\d\d\d\d)$','$1'),$id)"/>
+            <xsl:value-of select="concat(replace(../Datenotification,'^.+(\d\d\d\d)$','$1'),text())"/>
         </id>
     </xsl:template>
 
@@ -99,8 +97,18 @@
         </formePrix>
     </xsl:template>
 
+
+    <xsl:function name="cm:processDate" as="xs:string">
+        <xsl:param name="date" as="xs:string"/>
+        <xsl:value-of select="replace($date,'(\d\d)/(\d\d)/(\d\d\d\d)','$3-$2-$1')"/>
+    </xsl:function>
+
     <xsl:template match="dateNotification">
-        <dateNotification><xsl:value-of select="replace(text(),'(\d\d)/(\d\d)/(\d\d\d\d)','$3-$2-$1')"/></dateNotification>
+        <dateNotification><xsl:value-of select="cm:processDate(text())"/></dateNotification>
+    </xsl:template>
+
+    <xsl:template match="datePublicationDonnees">
+        <datePublicationDonnees><xsl:value-of select="cm:processDate(text())"/></datePublicationDonnees>
     </xsl:template>
 
     <xsl:template match="nature">

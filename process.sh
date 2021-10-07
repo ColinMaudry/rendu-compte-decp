@@ -41,7 +41,7 @@ message "Conversion du CSV vers un XML basique..."
 echo '<?xml version="1.0" encoding="UTF-8"?>' > $xml
 echo '<csv>' >> $xml
 
-while IFS=";" read -r Annee id acheteur_id acheteur_nom nature objet codeCPV procedure lieuExecution_code lieuExecution_typeCode lieuExecution_nom dureeMois dateNotification datePublicationDonnees montant formePrix titulaires_id titulaires_typeIdentifiant titulaires_denominationLegale
+while IFS="|" read -r Annee id acheteur_id acheteur_nom nature objet codeCPV procedure lieuExecution_code lieuExecution_typeCode lieuExecution_nom dureeMois dateNotification datePublicationDonnees montant formePrix titulaires_id titulaires_typeIdentifiant titulaires_denominationLegale
 
 do
     if [[ ! $id = "id" ]]
@@ -58,9 +58,9 @@ do
         echo "    <lieuExecution_code>$lieuExecution_code</lieuExecution_code>" >> $xml
         echo "    <lieuExecution_typeCode>$lieuExecution_typeCode</lieuExecution_typeCode>" >> $xml
         echo "    <lieuExecution_nom>$lieuExecution_nom</lieuExecution_nom>" >> $xml
-        echo "    <Dureemois>$Dureemois</Dureemois>" >> $xml
-        echo "    <dateNotification>$Datenotification</dateNotification>" >> $xml
-        echo "    <datePublicationDonnees>$Datepublicationdesdonnees</datePublicationDonnees>" >> $xml
+        echo "    <dureeMois>$dureeMois</dureeMois>" >> $xml
+        echo "    <dateNotification>$dateNotification</dateNotification>" >> $xml
+        echo "    <datePublicationDonnees>$datePublicationDonnees</datePublicationDonnees>" >> $xml
         echo "    <montant>$montant</montant>" | tr -d ", " >> $xml
         echo "    <formePrix>$formePrix</formePrix>" >> $xml
         echo "    <titulaires_id>$titulaires_id</titulaires_id>" >> $xml
